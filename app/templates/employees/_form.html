@@ -1,0 +1,38 @@
+<dialog open>
+  <article>
+    <header>
+      <strong>{{ 'Edit Employee' if employee else 'Add Employee' }}</strong>
+    </header>
+    <form
+      {% if employee %}
+        hx-put="/employees/{{ employee.employee_id }}"
+      {% else %}
+        hx-post="/employees"
+      {% endif %}
+      hx-target="body">
+
+      <label>
+        First Name
+        <input type="text" name="first_name" value="{{ employee.first_name if employee else '' }}" required autofocus>
+      </label>
+      <label>
+        Last Name
+        <input type="text" name="last_name" value="{{ employee.last_name if employee else '' }}" required>
+      </label>
+      <label>
+        Email
+        <input type="email" name="email" value="{{ employee.email if employee else '' }}" required>
+      </label>
+      <label>
+        Phone
+        <input type="tel" name="phone" value="{{ employee.phone if employee else '' }}">
+      </label>
+
+      <div class="grid">
+        <button type="submit">Save</button>
+        <button type="button" class="outline secondary" onclick="this.closest('dialog').remove()">Cancel</button>
+      </div>
+    </form>
+  </article>
+</dialog>
+<script>document.querySelector('dialog').showModal();</script>

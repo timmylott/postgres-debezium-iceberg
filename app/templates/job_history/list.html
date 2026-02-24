@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ul>
+    <li><a href="/employees">Employees</a></li>
+    <li>{{ employee.first_name }} {{ employee.last_name }}</li>
+    <li>Job History</li>
+  </ul>
+</nav>
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem">
+  <h2 style="margin:0">{{ employee.first_name }} {{ employee.last_name }} — Job History</h2>
+  <button
+    hx-get="/employees/{{ employee.employee_id }}/job-history/new"
+    hx-target="#dialog-container"
+    hx-swap="innerHTML">
+    + Add Entry
+  </button>
+</div>
+
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>Department</th>
+        <th>Manager</th>
+        <th>Hire Date</th>
+        <th>Termination Date</th>
+        <th>Salary</th>
+        <th>Reason</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for h in history %}
+      <tr id="jh-{{ h.id }}">
+        <td>{{ h.job_title }}</td>
+        <td>{{ h.dept_name }}</td>
+        <td>{{ h.manager_name or '—' }}</td>
+        <td>{{ h.hire_date }}</td>
+        <td>
+          {% if not h.termination_date %}
+            <span class="badge">Current</span>
+          {% else %}
+            {{ h.termination_date }}
+          {% endif %}
+        </td>
+        <td>{{ "${:,.0f}".format(h.salary) if h.salary else '—' }}</td>
+        <td>{{ h.reason or '—' }}</td>
+        <td>
+          <div class="actions">
+            <button class="outline"
+              hx-get="/employees/{{ employee.employee_id }}/job-history/{{ h.id }}/edit"
+              hx-target="#dialog-container"
+              hx-swap="innerHTML">
+              Edit
+            </button>
+            <button class="outline contrast"
+              hx-delete="/employees/{{ employee.employee_id }}/job-history/{{ h.id }}"
+              hx-target="#jh-{{ h.id }}"
+              hx-swap="outerHTML"
+              hx-confirm="Delete this job history entry?">
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" style="text-align:center;color:var(--pico-muted-color)">No job history found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>
+{% endblock %}

@@ -1,0 +1,74 @@
+<dialog open>
+  <article>
+    <header>
+      <strong>{{ 'Edit Job History Entry' if entry else 'Add Job History Entry' }}</strong>
+    </header>
+    <form
+      {% if entry %}
+        hx-put="/employees/{{ employee_id }}/job-history/{{ entry.id }}"
+      {% else %}
+        hx-post="/employees/{{ employee_id }}/job-history"
+      {% endif %}
+      hx-target="body">
+
+      <div class="grid">
+        <label>
+          Job / Role
+          <select name="job_id" required>
+            <option value="">Select a job...</option>
+            {% for j in jobs %}
+            <option value="{{ j.job_id }}" {{ 'selected' if entry and entry.job_id == j.job_id }}>{{ j.title }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>
+          Department
+          <select name="department_id" required>
+            <option value="">Select a department...</option>
+            {% for d in departments %}
+            <option value="{{ d.department_id }}" {{ 'selected' if entry and entry.department_id == d.department_id }}>{{ d.name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+
+      <label>
+        Manager
+        <select name="manager_id">
+          <option value="">None</option>
+          {% for m in managers %}
+          <option value="{{ m.employee_id }}" {{ 'selected' if entry and entry.manager_id == m.employee_id }}>{{ m.name }}</option>
+          {% endfor %}
+        </select>
+      </label>
+
+      <div class="grid">
+        <label>
+          Hire Date
+          <input type="date" name="hire_date" value="{{ entry.hire_date if entry else '' }}" required>
+        </label>
+        <label>
+          Termination Date
+          <input type="date" name="termination_date" value="{{ entry.termination_date if entry else '' }}">
+        </label>
+      </div>
+
+      <div class="grid">
+        <label>
+          Salary
+          <input type="number" name="salary" value="{{ entry.salary if entry else '' }}" min="0" step="1000">
+        </label>
+        <label>
+          Reason
+          <input type="text" name="reason" value="{{ entry.reason if entry else '' }}" placeholder="hired, promotion, transfer...">
+        </label>
+      </div>
+
+      <div class="grid">
+        <button type="submit">Save</button>
+        <button type="button" class="outline secondary" onclick="this.closest('dialog').remove()">Cancel</button>
+      </div>
+    </form>
+  </article>
+</dialog>
+<script>document.querySelector('dialog').showModal();</script>
