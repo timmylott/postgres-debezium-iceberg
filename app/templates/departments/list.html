@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem">
+  <h2 style="margin:0">Departments</h2>
+  <button
+    hx-get="/departments/new"
+    hx-target="#dialog-container"
+    hx-swap="innerHTML">
+    + Add Department
+  </button>
+</div>
+
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Location</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for d in departments %}
+      <tr id="dept-{{ d.department_id }}">
+        <td>{{ d.name }}</td>
+        <td>{{ d.location or '—' }}</td>
+        <td>
+          <div class="actions">
+            <button class="outline"
+              hx-get="/departments/{{ d.department_id }}/edit"
+              hx-target="#dialog-container"
+              hx-swap="innerHTML">
+              Edit
+            </button>
+            <button class="outline contrast"
+              hx-delete="/departments/{{ d.department_id }}"
+              hx-target="#dept-{{ d.department_id }}"
+              hx-swap="outerHTML"
+              hx-confirm="Delete {{ d.name }}?">
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3" style="text-align:center;color:var(--pico-muted-color)">No departments found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>
+{% endblock %}

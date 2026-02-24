@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem">
+  <h2 style="margin:0">Jobs</h2>
+  <button
+    hx-get="/jobs/new"
+    hx-target="#dialog-container"
+    hx-swap="innerHTML">
+    + Add Job
+  </button>
+</div>
+
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Min Salary</th>
+        <th>Max Salary</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for j in jobs %}
+      <tr id="job-{{ j.job_id }}">
+        <td>{{ j.title }}</td>
+        <td>{{ "${:,.0f}".format(j.min_salary) if j.min_salary else '—' }}</td>
+        <td>{{ "${:,.0f}".format(j.max_salary) if j.max_salary else '—' }}</td>
+        <td>
+          <div class="actions">
+            <button class="outline"
+              hx-get="/jobs/{{ j.job_id }}/edit"
+              hx-target="#dialog-container"
+              hx-swap="innerHTML">
+              Edit
+            </button>
+            <button class="outline contrast"
+              hx-delete="/jobs/{{ j.job_id }}"
+              hx-target="#job-{{ j.job_id }}"
+              hx-swap="outerHTML"
+              hx-confirm="Delete {{ j.title }}?">
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" style="text-align:center;color:var(--pico-muted-color)">No jobs found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem">
+  <h2 style="margin:0">Employees</h2>
+  <button
+    hx-get="/employees/new"
+    hx-target="#dialog-container"
+    hx-swap="innerHTML">
+    + Add Employee
+  </button>
+</div>
+
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Current Role</th>
+        <th>Department</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in employees %}
+      <tr id="employee-{{ e.employee_id }}">
+        <td>{{ e.first_name }} {{ e.last_name }}</td>
+        <td>{{ e.email }}</td>
+        <td>{{ e.phone or '—' }}</td>
+        <td>{{ e.current_job or '—' }}</td>
+        <td>{{ e.current_dept or '—' }}</td>
+        <td>
+          <div class="actions">
+            <a href="/employees/{{ e.employee_id }}/job-history" role="button" class="outline secondary" style="padding:0.2rem 0.6rem;font-size:0.8rem">History</a>
+            <button class="outline"
+              hx-get="/employees/{{ e.employee_id }}/edit"
+              hx-target="#dialog-container"
+              hx-swap="innerHTML">
+              Edit
+            </button>
+            <button class="outline contrast"
+              hx-delete="/employees/{{ e.employee_id }}"
+              hx-target="#employee-{{ e.employee_id }}"
+              hx-swap="outerHTML"
+              hx-confirm="Delete {{ e.first_name }} {{ e.last_name }}?">
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6" style="text-align:center;color:var(--pico-muted-color)">No employees found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</figure>
+{% endblock %}

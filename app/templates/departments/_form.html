@@ -1,0 +1,30 @@
+<dialog open>
+  <article>
+    <header>
+      <strong>{{ 'Edit Department' if department else 'Add Department' }}</strong>
+    </header>
+    <form
+      {% if department %}
+        hx-put="/departments/{{ department.department_id }}"
+      {% else %}
+        hx-post="/departments"
+      {% endif %}
+      hx-target="body">
+
+      <label>
+        Name
+        <input type="text" name="name" value="{{ department.name if department else '' }}" required autofocus>
+      </label>
+      <label>
+        Location
+        <input type="text" name="location" value="{{ department.location if department else '' }}">
+      </label>
+
+      <div class="grid">
+        <button type="submit">Save</button>
+        <button type="button" class="outline secondary" onclick="this.closest('dialog').remove()">Cancel</button>
+      </div>
+    </form>
+  </article>
+</dialog>
+<script>document.querySelector('dialog').showModal();</script>

@@ -1,0 +1,36 @@
+<dialog open>
+  <article>
+    <header>
+      <strong>{{ 'Edit Job' if job else 'Add Job' }}</strong>
+    </header>
+    <form
+      {% if job %}
+        hx-put="/jobs/{{ job.job_id }}"
+      {% else %}
+        hx-post="/jobs"
+      {% endif %}
+      hx-target="body">
+
+      <label>
+        Title
+        <input type="text" name="title" value="{{ job.title if job else '' }}" required autofocus>
+      </label>
+      <div class="grid">
+        <label>
+          Min Salary
+          <input type="number" name="min_salary" value="{{ job.min_salary if job else '' }}" min="0" step="1000">
+        </label>
+        <label>
+          Max Salary
+          <input type="number" name="max_salary" value="{{ job.max_salary if job else '' }}" min="0" step="1000">
+        </label>
+      </div>
+
+      <div class="grid">
+        <button type="submit">Save</button>
+        <button type="button" class="outline secondary" onclick="this.closest('dialog').remove()">Cancel</button>
+      </div>
+    </form>
+  </article>
+</dialog>
+<script>document.querySelector('dialog').showModal();</script>

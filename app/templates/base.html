@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HR Manager</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <script src="https://unpkg.com/htmx.org@2.0.3/dist/htmx.min.js"></script>
+  <style>
+    body > header { border-bottom: 1px solid var(--pico-muted-border-color); }
+    nav a.active { font-weight: bold; color: var(--pico-primary); }
+    table { font-size: 0.875rem; }
+    .actions { display: flex; gap: 0.4rem; }
+    .actions button { margin: 0; padding: 0.2rem 0.6rem; font-size: 0.8rem; }
+    dialog article { margin: 0; }
+    dialog article header { padding-bottom: 0.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--pico-muted-border-color); }
+    .badge { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.75rem; background: var(--pico-secondary-background); }
+  </style>
+</head>
+<body>
+  <header class="container-fluid">
+    <nav>
+      <ul>
+        <li><strong><a href="/" style="text-decoration:none;color:inherit">HR Manager</a></strong></li>
+      </ul>
+      <ul>
+        <li><a href="/employees" class="{{ 'active' if request.url.path.startswith('/employees') }}">Employees</a></li>
+        <li><a href="/departments" class="{{ 'active' if request.url.path.startswith('/departments') }}">Departments</a></li>
+        <li><a href="/jobs" class="{{ 'active' if request.url.path.startswith('/jobs') }}">Jobs</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <div id="dialog-container"></div>
+</body>
+</html>
